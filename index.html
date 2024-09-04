@@ -64,6 +64,18 @@
             if (!list || list.length !== 1) {return;}
             const words = list[0].words.map(w => w.word);
             console.log("sending newEntries", words.join(""));
+
+	    let tester = (words) => {
+		for (const word of words) {
+		    if (/Matt/i.test(words)) {
+			return true;
+		    }
+		}
+		return false;
+	    };
+	    if (tester(words)) {
+		console.log("do something");
+	    }
             Events.message("renkonMessage", {sentence: words.join("")});
         })(newEntries);
 
