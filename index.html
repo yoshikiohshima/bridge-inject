@@ -54,7 +54,7 @@
         const newEntries = Events.collect({length: 0, list: []}, ev,
           (current, ev) => {
               const entries = ev.value?.entries;
-            const length = entries?.length || 0;
+              const length = entries?.length || 0;
               if (length <= current.length) {return current;}
               return {length, list: entries.slice(current.length), trackID: ev.value?.activeSession?.Tracks?.[0]?.ID};
         });
@@ -63,7 +63,9 @@
             const list = newEntries.list;
             const trackID = newEntries.trackID;
             if (!list || list.length !== 1) {return;}
+
             const words = list[0].words.map(w => w.word);
+            const wordTime = list[0].words[list[0].words.length - 1].start;
             console.log("sending newEntries", words.join(""));
 
             let tester = (words) => {
@@ -79,8 +81,8 @@
                 if (trackID) {
                     const body = {
                         "type": "transcription",
-                        "start": 10000000,
-                        "end": 10000000,
+                        "start": wordTime + 5000,
+                        "end": wordTime + 5000,
                         "data": {
                             "segments": [{
                                 "text": "hello world",
