@@ -13,9 +13,9 @@
         const render = preactModule.render;
         const entries = document.querySelector("#entries");
 
-	window.top.postMessage({event: "appReady"});
+        window.top.postMessage({event: "appReady"});
 
-	const sessionSpec = (() => document.querySelector("#sessionName").textContent)(Events.click("setSessionButton"));
+        const sessionSpec = (() => document.querySelector("#sessionName").textContent)(Events.click("setSessionButton"));
 
         const socket = Behaviors.collect(undefined, Events.change(sessionSpec), (old, sessionSpec) => {
           if (old) {
@@ -51,9 +51,9 @@
 
         const transcript = ev.value.entries.map(entryMapper);
 
-        const newEntries = Behaviors.collect({length: 0, list: []}, ev,
+        const newEntries = Events.collect({length: 0, list: []}, ev,
           (current, ev) => {
-            const entries = ev.value?.entries;
+              const entries = ev.value?.entries;
             const length = entries?.length || 0;
               if (length <= current.length) {return current;}
               return {length, list: entries.slice(current.length), trackID: ev.value?.activeSession?.Tracks?.[0]?.ID};
@@ -61,46 +61,46 @@
 
         const messenger = ((newEntries, sessionSpec) => {
             const list = newEntries.list;
-	    const trackID = newEntries.trackID;
+            const trackID = newEntries.trackID;
             if (!list || list.length !== 1) {return;}
             const words = list[0].words.map(w => w.word);
             console.log("sending newEntries", words.join(""));
 
-	    let tester = (words) => {
-		for (const word of words) {
-		    if (/Adam/i.test(words)) {
-			return true;
-		    }
-		}
-		return false;
-	    };
-	    if (tester(words)) {
-		console.log("do something", trackID);
-		if (trackID) {
-		    const body = {
-			"type": "transcription",
-			"start": 10000000,
-			"end": 10000000,
-			"data": {
-			    "segments": [{
-				"text": "hello world",
-				"words": [
-				    {"word": "hello"},
-				    {"word": " world"}
-				]
-			    }]
-			}
-		    };
-		    fetch(
-			`${sessionSpec}/tracks/${trackID}`,
-			{
-			    method: "POST",
-			    mode: "no-cors",
-			    body: JSON.stringify(body)
-			}
-		    )
-		}
-	    }
+            let tester = (words) => {
+                for (const word of words) {
+                    if (/Adam/i.test(words)) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            if (tester(words)) {
+                console.log("do something", trackID);
+                if (trackID) {
+                    const body = {
+                        "type": "transcription",
+                        "start": 10000000,
+                        "end": 10000000,
+                        "data": {
+                            "segments": [{
+                                "text": "hello world",
+                                "words": [
+                                    {"word": "hello"},
+                                    {"word": " world"}
+                                ]
+                            }]
+                        }
+                    };
+                    fetch(
+                        `${sessionSpec}/tracks/${trackID}`,
+                        {
+                            method: "POST",
+                            mode: "no-cors",
+                            body: JSON.stringify(body)
+                        }
+                    )
+                }
+            }
             Events.message("renkonMessage", {sentence: words.join("")});
         })(newEntries, sessionSpec);
 
@@ -159,10 +159,10 @@
           <div class="flex flex-wrap align-center px-6 py-4">
             <h1 id="logo" class="py-1 text-xl font-bold grow">bridge</h1>
           </div>
-	  <div id="sessionNameHolder">
-	    <div contentEditable id="sessionName">https://substrate.home.arpa/bridge;sessions=sp-01J343NFDMW9B5XG6S6XJZDNE8;id=cqcqi10ri6qs739svgu1</div>
-	    <button id="setSessionButton">Set</button>
-	  </div>
+          <div id="sessionNameHolder">
+            <div contentEditable id="sessionName">https://substrate.home.arpa/bridge;sessions=sp-01J343NFDMW9B5XG6S6XJZDNE8;id=cqcqi10ri6qs739svgu1</div>
+            <button id="setSessionButton">Set</button>
+          </div>
           <div id="sessions"></div>
         </div>
         <div class="flex flex-col grow">
