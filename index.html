@@ -55,29 +55,54 @@
           (current, ev) => {
             const entries = ev.value?.entries;
             const length = entries?.length || 0;
-            if (length <= current.length) {return current;}
-            return {length, list: entries.slice(current.length)};
+              if (length <= current.length) {return current;}
+              return {length, list: entries.slice(current.length), trackID: ev.value?.activeSession?.Tracks?.[0]?.ID};
         });
 
-        const messenger = ((newEntries) => {
+        const messenger = ((newEntries, sessionSpec) => {
             const list = newEntries.list;
+	    const trackID = newEntries.trackID;
             if (!list || list.length !== 1) {return;}
             const words = list[0].words.map(w => w.word);
             console.log("sending newEntries", words.join(""));
 
 	    let tester = (words) => {
 		for (const word of words) {
-		    if (/Matt/i.test(words)) {
+		    if (/Adam/i.test(words)) {
 			return true;
 		    }
 		}
 		return false;
 	    };
 	    if (tester(words)) {
-		console.log("do something");
+		console.log("do something", trackID);
+		if (trackID) {
+		    const body = {
+			"type": "transcription",
+			"start": 10000000,
+			"end": 10000000,
+			"data": {
+			    "segments": [{
+				"text": "hello world",
+				"words": [
+				    {"word": "hello"},
+				    {"word": " world"}
+				]
+			    }]
+			}
+		    };
+		    fetch(
+			`${sessionSpec}/tracks/${trackID}`,
+			{
+			    method: "POST",
+			    mode: "no-cors",
+			    body: JSON.stringify(body)
+			}
+		    )
+		}
 	    }
             Events.message("renkonMessage", {sentence: words.join("")});
-        })(newEntries);
+        })(newEntries, sessionSpec);
 
         const entryMapper = ((html, formatTime) => (attrs) => {return html`
           <div class="entry" data-start="${attrs.span.start}" data-end="${attrs.span.end}">
