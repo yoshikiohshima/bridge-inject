@@ -70,7 +70,7 @@
 
             let tester = (words) => {
                 for (const word of words) {
-                    if (/Adam/i.test(words)) {
+                    if (/hello/i.test(words)) {
                         return true;
                     }
                 }
@@ -81,14 +81,14 @@
                 if (trackID) {
                     const body = {
                         "type": "transcription",
-                        "start": wordTime + 5000,
-                        "end": wordTime + 5000,
+                        "start": Math.floor(wordTime + 5000),
+                        "end": Math.floor(wordTime + 5000),
                         "data": {
                             "segments": [{
-                                "text": "hello world",
+                                "text": "echo back",
                                 "words": [
-                                    {"word": "hello"},
-                                    {"word": " world"}
+                                    {"word": "echo"},
+                                    {"word": " back"}
                                 ]
                             }]
                         }
@@ -162,7 +162,7 @@
             <h1 id="logo" class="py-1 text-xl font-bold grow">bridge</h1>
           </div>
           <div id="sessionNameHolder">
-            <div contentEditable id="sessionName">https://substrate.home.arpa/bridge;sessions=sp-01J343NFDMW9B5XG6S6XJZDNE8;id=cqcqi10ri6qs739svgu1</div>
+            <div contentEditable id="sessionName">https://substrate.home.arpa/bridge;sessions=sp-01J343NFDMW9B5XG6S6XJZDNE8;id=cqcqi10ri6qs739svkk1</div>
             <button id="setSessionButton">Set</button>
           </div>
           <div id="sessions"></div>
